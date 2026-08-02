@@ -129,7 +129,12 @@
   .pnew{position:absolute;top:12px;right:12px;z-index:2;color:var(--ink);border:1px solid var(--ink);border-radius:30px;padding:3px 9px}
   .pcanvas.photo .ptag{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.55)}
   .pcanvas.photo .pnew{color:#fff;border-color:rgba(255,255,255,.75)}
-  .pv-visual.photo{padding:0}
+  .pv-visual.photo{padding:0;cursor:zoom-in}
+  .lightbox{position:fixed;inset:0;z-index:450;background:rgba(10,9,7,.94);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:4px;box-shadow:0 20px 80px rgba(0,0,0,.5)}
+  .lb-close{position:fixed;top:16px;right:20px;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;z-index:2;opacity:.85}
+  .lb-close:hover{opacity:1}
   .pinfo{padding-top:14px}
   .ptop{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .pname{font-family:"Bodoni Moda",serif;font-size:clamp(17px,1.5vw,21px)}
@@ -691,6 +696,9 @@
     </div>
   </div>
 
+  <!-- IMAGE LIGHTBOX -->
+  <div class="lightbox" id="lightbox"><img id="lightboxImg" alt="Product"><button class="lb-close" id="lbClose" aria-label="Close">✕</button></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.14/lenis.min.js"></script>
@@ -810,8 +818,8 @@ function openProduct(p){
   document.getElementById('pvPrice').textContent='$'+p.price;
   document.getElementById('pvDesc').textContent=p.desc;
   const vis=document.getElementById('pvVisual');
-  if(p.img){vis.innerHTML='';vis.classList.add('photo');vis.style.background=`url('${p.img}') center/cover`;}
-  else{vis.classList.remove('photo');vis.style.background='';vis.innerHTML=garment(p.type);}
+  if(p.img){vis.innerHTML='';vis.classList.add('photo');vis.style.background=`url('${p.img}') center/cover`;vis.onclick=()=>openLightbox(p.img);}
+  else{vis.classList.remove('photo');vis.style.background='';vis.innerHTML=garment(p.type);vis.onclick=null;}
   let color=p.colors[0];if(!p.img)vis.style.setProperty('--g',color);
   const mc=document.getElementById('pvColors');
   mc.innerHTML=p.colors.map((c,i)=>`<span class="sw ${i===0?'active':''}" data-c="${c}" style="background:${c}"></span>`).join('');
@@ -903,7 +911,7 @@ document.querySelectorAll('[data-home]').forEach(a=>a.addEventListener('click',g
 document.querySelectorAll('[data-open-cart]').forEach(a=>a.addEventListener('click',openCart));
 document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>{b.dataset.back==='cart'?openCart():goHome();}));
 document.getElementById('discover').addEventListener('click',()=>openShop('all'));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.pop.open').forEach(p=>p.classList.remove('open'));mMenu.classList.remove('open');goHome();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(lightbox.classList.contains('open')){closeLightbox();return;}document.querySelectorAll('.pop.open').forEach(p=>p.classList.remove('open'));mMenu.classList.remove('open');goHome();}});
 document.getElementById('news').addEventListener('submit',e=>{e.preventDefault();alert('Welcome to OYLA — '+e.target.querySelector('input').value+' added to the list.');e.target.reset();});
 
 /* ---------- AI ASSISTANT ---------- */
@@ -1029,6 +1037,12 @@ setTheme(theme);
 function toggleTheme(){setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');}
 themeBtn.addEventListener('click',toggleTheme);
 document.getElementById('mmTheme').addEventListener('click',toggleTheme);
+
+/* ---------- IMAGE LIGHTBOX ---------- */
+const lightbox=document.getElementById('lightbox'),lbImg=document.getElementById('lightboxImg');
+function openLightbox(src){lbImg.src=src;lightbox.classList.add('open');document.body.style.overflow='hidden';}
+function closeLightbox(){lightbox.classList.remove('open');if(!document.querySelector('.page.open'))document.body.style.overflow='';}
+lightbox.addEventListener('click',closeLightbox);
 
 /* ---------- SPLIT TEXT ---------- */
 document.querySelectorAll('[data-w]').forEach(w=>{const t=w.textContent;w.textContent='';
