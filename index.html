@@ -1013,7 +1013,7 @@ function init(){
       .from('.hero-foot',{y:20,opacity:0,duration:.8,ease:'power3.out'},'-=0.55');
   }
   if(!reduce){
-    gsap.to(chars,{yPercent:-120,opacity:0,filter:'blur(14px)',stagger:{each:0.02},scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:0.6}});
+    gsap.to('.headline',{yPercent:-45,opacity:0,filter:'blur(10px)',scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:0.6}});
     gsap.to('#discover, .hero-note, .eyebrow',{opacity:0,y:-30,scrollTrigger:{trigger:'#hero',start:'20% top',end:'70% top',scrub:0.6}});
     gsap.to('.figure',{yPercent:14,scale:1.08,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:true}});
   }
