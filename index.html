@@ -59,9 +59,6 @@
   .mm-links a{font-family:"Bodoni Moda",serif;font-size:clamp(30px,9vw,46px);padding:11px 0;border-bottom:1px solid var(--line-soft);cursor:pointer;line-height:1}
   .mm-foot{display:flex;gap:20px;align-items:center;padding-top:22px;border-top:1px solid var(--line);flex-wrap:wrap}
   .mm-foot button,.mm-foot a{background:none;border:none;cursor:pointer;color:var(--ink)}
-  .ruler{position:fixed;left:0;top:0;height:100vh;width:1px;background:var(--line);z-index:90;pointer-events:none}
-  .ruler i{position:absolute;left:0;width:7px;height:1px;background:var(--line)}
-  .progress-read{position:fixed;left:14px;bottom:20px;z-index:95;color:var(--stone);mix-blend-mode:difference}
 
   /* ---------- HERO ---------- */
   .hero-pin{height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 clamp(16px,4vw,54px) clamp(28px,5vh,60px)}
@@ -367,9 +364,6 @@
 </style>
 </head>
 <body>
-
-  <div class="ruler" id="ruler"></div>
-  <div class="progress-read mono" id="pr">0.000</div>
 
   <header>
     <div class="brand" data-nav="home">OYLA</div>
@@ -1002,9 +996,7 @@ function toggleTheme(){setTheme(document.documentElement.getAttribute('data-them
 themeBtn.addEventListener('click',toggleTheme);
 document.getElementById('mmTheme').addEventListener('click',toggleTheme);
 
-/* ---------- RULER + SPLIT ---------- */
-(function(){const r=document.getElementById('ruler'),n=Math.floor(window.innerHeight/16);
-  for(let i=0;i<=n;i++){const t=document.createElement('i');t.style.top=(i*16)+'px';if(i%5===0)t.style.width='14px';r.appendChild(t);}})();
+/* ---------- SPLIT TEXT ---------- */
 document.querySelectorAll('[data-w]').forEach(w=>{const t=w.textContent;w.textContent='';
   [...t].forEach(c=>{const s=document.createElement('span');s.className='char';s.textContent=(c===' ')?'\u00A0':c;w.appendChild(s);});});
 
@@ -1025,7 +1017,6 @@ function init(){
     gsap.to('#discover, .hero-note, .eyebrow',{opacity:0,y:-30,scrollTrigger:{trigger:'#hero',start:'20% top',end:'70% top',scrub:0.6}});
     gsap.to('.figure',{yPercent:14,scale:1.08,scrollTrigger:{trigger:'#hero',start:'top top',end:'bottom top',scrub:true}});
   }
-  ScrollTrigger.create({trigger:'#hero',start:'top top',end:'bottom top',onUpdate:s=>document.getElementById('pr').textContent=s.progress.toFixed(3)});
   if(!reduce){
     gsap.fromTo('#frame',{width:'34vw',height:'44vh'},{width:'100vw',height:'100vh',ease:'none',scrollTrigger:{trigger:'.reveal',start:'top top',end:'bottom bottom',scrub:0.5}});
     gsap.fromTo('#revealInner',{scale:1.15},{scale:1,ease:'none',scrollTrigger:{trigger:'.reveal',start:'top top',end:'bottom bottom',scrub:true}});
