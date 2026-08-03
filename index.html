@@ -179,7 +179,7 @@
   .news input{flex:1;background:transparent;border:none;color:var(--pearl);outline:none;font-family:"Inter";font-size:16px}
   .news input::placeholder{color:rgba(237,235,231,.4)}
   .news button{background:transparent;border:none;color:var(--pearl);cursor:pointer;font-family:"Space Mono",monospace;text-transform:uppercase;letter-spacing:.16em;font-size:11px}
-  .foot-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .foot-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
   .fcol{display:flex;flex-direction:column;gap:12px}
   .fcol .fh{color:rgba(237,235,231,.45);margin-bottom:4px}
   .fcol a,.fcol .fmuted{color:rgba(237,235,231,.8);font-size:14px;cursor:pointer;transition:color .3s;width:fit-content}
@@ -251,6 +251,17 @@
   .ai-input input:focus{border-color:var(--ink)}
   .ai-input button{width:42px;height:42px;border-radius:50%;border:none;background:var(--ink);color:var(--pearl);cursor:pointer;font-size:16px;flex:0 0 auto}
   @media(max-width:480px){.ai-panel{right:12px;left:12px;width:auto;bottom:80px;height:min(72vh,520px)}}
+
+  /* ---------- CONTENT / LEGAL PAGES ---------- */
+  .doc-wrap{max-width:760px;margin:0 auto;padding:clamp(30px,7vh,80px) clamp(16px,4vw,40px)}
+  .doc-wrap h1{font-family:"Bodoni Moda",serif;font-weight:400;font-size:clamp(40px,7vw,76px);line-height:.92;margin-bottom:26px}
+  .doc-lead{font-size:clamp(17px,2.2vw,22px);line-height:1.5;font-weight:300;margin-bottom:30px}
+  .doc-body h3{font-family:"Bodoni Moda",serif;font-weight:400;font-size:clamp(20px,3vw,28px);margin:30px 0 8px}
+  .doc-body p{color:var(--stone);line-height:1.75;font-weight:300;margin-bottom:10px}
+  .doc-note{font-size:12px;color:var(--stone);border-top:1px solid var(--line);margin-top:36px;padding-top:18px;font-style:italic}
+  .doc-table{margin:14px 0 6px}
+  .doc-row{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line-soft);color:var(--stone);font-weight:300}
+  .doc-row b{color:var(--ink);font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.08em;font-weight:400}
 
   /* ---------- AVATAR + POPUPS ---------- */
   .avatarbtn{position:relative;background:none;border:1px solid currentColor;color:inherit;cursor:pointer;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;padding:0;font-family:"Space Mono",monospace;font-size:11px;letter-spacing:0;transition:transform .3s}
@@ -477,13 +488,14 @@
       </div>
       <div class="foot-cols">
         <div class="fcol"><span class="fh mono">Shop</span><a data-nav="all">All</a><a data-nav="new">New</a><a data-nav="girls">Girls</a><a data-nav="boys">Boys</a></div>
-        <div class="fcol"><span class="fh mono">Studio</span><a data-nav="lookbook">Lookbook</a><a data-nav="contact">Contact</a><a data-nav="about">About</a></div>
-        <div class="fcol"><span class="fh mono">Reach us</span><a href="mailto:hello@oyla.store">hello@oyla.store</a><a href="tel:+212520000000">+212 5 20 00 00 00</a><span class="fmuted">Casablanca, Morocco</span></div>
+        <div class="fcol"><span class="fh mono">Company</span><a data-nav="about">About</a><a data-nav="lookbook">Lookbook</a><a data-nav="contact">Contact</a></div>
+        <div class="fcol"><span class="fh mono">Help</span><a data-doc="shipping">Shipping &amp; Returns</a><a data-doc="faq">FAQ</a><a data-doc="sizing">Sizing Guide</a></div>
+        <div class="fcol"><span class="fh mono">Legal</span><a data-doc="privacy">Privacy</a><a data-doc="terms">Terms</a><span class="fmuted">Casablanca, Morocco</span></div>
       </div>
     </div>
     <div class="foot-bottom mono">
       <span>© 2026 OYLA — Made in Casablanca</span>
-      <div class="foot-links"><a href="#">Instagram</a><a href="#">Terms</a><a href="#">Privacy</a></div>
+      <div class="foot-links"><a href="#">Instagram</a><a data-doc="privacy">Privacy</a><a data-doc="terms">Terms</a></div>
     </div>
   </footer>
 
@@ -591,6 +603,14 @@
         <div class="cinfo"><span class="lbl mono">Follow</span><span><a href="#">Instagram</a> · <a href="#">Pinterest</a></span></div>
       </aside>
     </div>
+  </div>
+
+  <!-- ===== CONTENT / LEGAL PAGE ===== -->
+  <div class="page" id="page-doc">
+    <div class="page-nav"><button class="back" data-back="home">← Back</button>
+      <div class="brand" data-nav="home">OYLA</div>
+      <button class="bagbtn dark" data-open-cart aria-label="Bag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="badge">0</span></button></div>
+    <div class="doc-wrap"><h1 id="docTitle"></h1><div class="doc-body" id="docBody"></div></div>
   </div>
 
   <!-- ===== ALL PRODUCTS PAGE ===== -->
@@ -804,7 +824,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('.filters button'
 
 /* ---------- ROUTER ---------- */
 let lenis=null;
-const PAGES=['page-product','page-cart','page-checkout','page-contact','page-about','page-shop'];
+const PAGES=['page-product','page-cart','page-checkout','page-contact','page-about','page-shop','page-doc'];
 function showPage(id){PAGES.forEach(p=>document.getElementById(p).classList.toggle('open',p===id));
   document.body.style.overflow='hidden';if(lenis)lenis.stop();const el=document.getElementById(id);if(el)el.scrollTop=0;}
 function goHome(){PAGES.forEach(p=>document.getElementById(p).classList.remove('open'));
@@ -876,6 +896,54 @@ document.getElementById('contactForm').addEventListener('submit',e=>{e.preventDe
   const m=document.getElementById('contactMsg');
   m.textContent='Thanks — your message is on its way. We usually reply within a day.';m.classList.add('show');
   e.target.querySelectorAll('input,textarea').forEach(i=>i.value='');});
+
+/* ---------- CONTENT / LEGAL PAGES ---------- */
+const DOCS={
+  privacy:{title:'Privacy Policy',body:`
+    <p class="doc-lead">This policy explains what we collect, why, and the choices you have. We keep it short and plain.</p>
+    <h3>What we collect</h3><p>When you place an order or join our list, we collect your name, email, shipping address, and order details. Payment is handled by our payment processor — we never see or store your full card number.</p>
+    <h3>How we use it</h3><p>To process and ship your order, send order updates, answer questions, and — only if you opt in — share occasional news about new pieces. That's all.</p>
+    <h3>Cookies</h3><p>We use a small number of cookies to keep the site working and understand what's useful. You can clear or block them in your browser at any time.</p>
+    <h3>Sharing</h3><p>We never sell your data. We share only what's needed with the partners who ship your order and process payments, and only for that purpose.</p>
+    <h3>Your rights</h3><p>You can ask us to show, correct, or delete the data we hold about you, or unsubscribe at any time. Write to hello@oyla.store and we'll take care of it.</p>
+    <p class="doc-note">This is a template for a demo store. For a live shop, have it reviewed against the laws that apply to you.</p>`},
+  terms:{title:'Terms & Conditions',body:`
+    <p class="doc-lead">By using this site and placing an order, you agree to the terms below.</p>
+    <h3>Orders</h3><p>An order is confirmed once you receive our confirmation email. We may decline or cancel an order — for example, if an item is out of stock or priced in error — and will refund you in full if we do.</p>
+    <h3>Pricing & payment</h3><p>Prices are shown in your bag before checkout and may change over time. Payment is taken at checkout through our secure processor.</p>
+    <h3>Shipping & returns</h3><p>Delivery times, costs, and our returns window are set out on the Shipping & Returns page, which forms part of these terms.</p>
+    <h3>Intellectual property</h3><p>The OYLA name, designs, images, and text on this site belong to us and may not be reused without permission.</p>
+    <h3>Liability</h3><p>We stand behind our products, but to the extent the law allows, we're not liable for indirect losses arising from use of the site.</p>
+    <h3>Governing law</h3><p>These terms are governed by the laws of Morocco. Questions? hello@oyla.store.</p>
+    <p class="doc-note">Template for a demo store — review with a professional before going live.</p>`},
+  shipping:{title:'Shipping & Returns',body:`
+    <p class="doc-lead">Everything you need to know about getting your order — and sending it back if it's not right.</p>
+    <h3>Shipping</h3><p>Orders ship within 2–4 business days from Portugal, with tracking sent to your email. Delivery is free on orders over $60; a flat rate applies below that, shown at checkout.</p>
+    <h3>Where we ship</h3><p>We currently ship across Morocco, Europe, and North America. If your country isn't listed at checkout, write to us and we'll see what we can do.</p>
+    <h3>Returns</h3><p>Not right? Return unworn pieces with tags within 30 days for a full refund. We refund the original payment method within a week of receiving your return.</p>
+    <h3>Exchanges</h3><p>Need a different size? We'll swap it and cover the shipping back to you — reply to your order email or write to hello@oyla.store.</p>`},
+  faq:{title:'FAQ',body:`
+    <h3>What sizes do you carry?</h3><p>Every piece runs 2Y–10Y, cut with a little room to grow. If your child is between sizes, size up. See the Sizing Guide for details.</p>
+    <h3>What are your clothes made of?</h3><p>100% organic cotton, wash-tested sixty times. Machine wash at 30° and line dry — no shrinking.</p>
+    <h3>How long does delivery take?</h3><p>2–4 business days to ship, plus carrier time, with tracking by email. Free over $60.</p>
+    <h3>Can I return or exchange?</h3><p>Yes — 30 days, unworn, tags on. Exchanges are free.</p>
+    <h3>How do I pay?</h3><p>By card at checkout, through our secure processor.</p>
+    <h3>Still stuck?</h3><p>Tap the WhatsApp button, email hello@oyla.store, or use the contact page — a real person replies within a day.</p>`},
+  sizing:{title:'Sizing Guide',body:`
+    <p class="doc-lead">Our pieces are cut with a little room to grow. If your child is between sizes, size up.</p>
+    <h3>Size by age & height</h3>
+    <div class="doc-table">
+      <div class="doc-row"><b>2Y</b><span>86 – 92 cm</span></div>
+      <div class="doc-row"><b>4Y</b><span>98 – 104 cm</span></div>
+      <div class="doc-row"><b>6Y</b><span>110 – 116 cm</span></div>
+      <div class="doc-row"><b>8Y</b><span>122 – 128 cm</span></div>
+      <div class="doc-row"><b>10Y</b><span>134 – 140 cm</span></div>
+    </div>
+    <h3>How to measure</h3><p>Measure your child's height without shoes, head to heel. Between two sizes? Choose the larger — our cotton softens and relaxes with wear, not the other way around.</p>
+    <h3>Fit notes</h3><p>Tops and dresses sit relaxed; joggers and shorts have an elastic, adjustable waist. Everything is made to layer and last through a growth spurt.</p>`}
+};
+function openDoc(k){const d=DOCS[k];if(!d)return;document.getElementById('docTitle').textContent=d.title;document.getElementById('docBody').innerHTML=d.body;showPage('page-doc');}
+document.querySelectorAll('[data-doc]').forEach(a=>a.addEventListener('click',()=>openDoc(a.dataset.doc)));
 
 /* ---------- CHECKOUT ---------- */
 function renderCheckout(){
