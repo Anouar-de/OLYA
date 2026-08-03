@@ -135,6 +135,16 @@
   .lightbox img{max-width:95vw;max-height:92vh;object-fit:contain;border-radius:4px;box-shadow:0 20px 80px rgba(0,0,0,.5)}
   .lb-close{position:fixed;top:16px;right:20px;background:none;border:none;color:#fff;font-size:24px;cursor:pointer;z-index:2;opacity:.85}
   .lb-close:hover{opacity:1}
+
+  /* ---------- CUSTOM CURSOR ---------- */
+  .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;mix-blend-mode:difference;opacity:0;will-change:transform}
+  .cursor-dot{width:7px;height:7px;background:#fff;transition:opacity .3s}
+  .cursor-ring{width:36px;height:36px;border:1px solid #fff;transition:width .35s cubic-bezier(.7,0,.2,1),height .35s cubic-bezier(.7,0,.2,1),background .35s,opacity .3s}
+  body.cursor-on .cursor-dot,body.cursor-on .cursor-ring{opacity:1}
+  .cursor-ring.hover{width:58px;height:58px;background:rgba(255,255,255,.14)}
+  .cursor-ring.down{width:26px;height:26px}
+  @media(pointer:fine){body.cursor-on,body.cursor-on a,body.cursor-on button,body.cursor-on .pcard,body.cursor-on .look{cursor:none}
+    body.cursor-on input,body.cursor-on textarea{cursor:text}}
   .pinfo{padding-top:14px}
   .ptop{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .pname{font-family:"Bodoni Moda",serif;font-size:clamp(17px,1.5vw,21px)}
@@ -744,6 +754,10 @@
   <!-- IMAGE LIGHTBOX -->
   <div class="lightbox" id="lightbox"><img id="lightboxImg" alt="Product"><button class="lb-close" id="lbClose" aria-label="Close">✕</button></div>
 
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.14/lenis.min.js"></script>
@@ -1145,6 +1159,25 @@ const lightbox=document.getElementById('lightbox'),lbImg=document.getElementById
 function openLightbox(src){lbImg.src=src;lightbox.classList.add('open');document.body.style.overflow='hidden';}
 function closeLightbox(){lightbox.classList.remove('open');if(!document.querySelector('.page.open'))document.body.style.overflow='';}
 lightbox.addEventListener('click',closeLightbox);
+
+/* ---------- CUSTOM CURSOR ---------- */
+(function(){
+  if(!window.matchMedia('(pointer:fine)').matches || reduce)return;
+  const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
+  document.body.classList.add('cursor-on');
+  let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+  window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;
+    dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;});
+  (function loop(){rx+=(mx-rx)*0.18;ry+=(my-ry)*0.18;
+    ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(loop);})();
+  const hoverSel='a,button,.pcard,.look,.sw,.qadd,[data-nav],[data-doc],[data-back],[data-open-cart],[data-home],.wa-float,.ai-fab,.themebtn,.avatarbtn,.discover,summary';
+  document.addEventListener('mouseover',e=>{if(e.target.closest(hoverSel))ring.classList.add('hover');});
+  document.addEventListener('mouseout',e=>{if(e.target.closest(hoverSel))ring.classList.remove('hover');});
+  window.addEventListener('mousedown',()=>ring.classList.add('down'));
+  window.addEventListener('mouseup',()=>ring.classList.remove('down'));
+  document.addEventListener('mouseleave',()=>{dot.style.opacity='0';ring.style.opacity='0';});
+  document.addEventListener('mouseenter',()=>{dot.style.opacity='';ring.style.opacity='';});
+})();
 
 /* ---------- SPLIT TEXT ---------- */
 document.querySelectorAll('[data-w]').forEach(w=>{const t=w.textContent;w.textContent='';
