@@ -967,7 +967,7 @@ const DOCS={
     <h3>Fit notes</h3><p>Tops and dresses sit relaxed; joggers and shorts have an elastic, adjustable waist. Everything is made to layer and last through a growth spurt.</p>`}
 };
 function openDoc(k){const d=DOCS[k];if(!d)return;document.getElementById('docTitle').textContent=d.title;document.getElementById('docBody').innerHTML=d.body;showPage('page-doc');}
-document.querySelectorAll('[data-doc]').forEach(a=>a.addEventListener('click',()=>openDoc(a.dataset.doc)));
+document.addEventListener('click',e=>{const a=e.target.closest('[data-doc]');if(a)openDoc(a.dataset.doc);});
 
 /* ---------- CHECKOUT ---------- */
 function renderCheckout(){
@@ -999,13 +999,21 @@ function navTo(n){
   if(n==='lookbook'){goHome();requestAnimationFrame(()=>smoothScroll('#lookbook'));return;}
   openShop(n); /* all / new / girls / boys */
 }
-document.querySelectorAll('[data-nav]').forEach(a=>a.addEventListener('click',()=>navTo(a.dataset.nav)));
+document.addEventListener('click',e=>{const a=e.target.closest('[data-nav]');if(a)navTo(a.dataset.nav);});
 document.querySelectorAll('[data-home]').forEach(a=>a.addEventListener('click',goHome));
 document.querySelectorAll('[data-open-cart]').forEach(a=>a.addEventListener('click',openCart));
 document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>{b.dataset.back==='cart'?openCart():goHome();}));
 document.getElementById('discover').addEventListener('click',()=>openShop('all'));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(lightbox.classList.contains('open')){closeLightbox();return;}document.querySelectorAll('.pop.open').forEach(p=>p.classList.remove('open'));mMenu.classList.remove('open');goHome();}});
-document.getElementById('news').addEventListener('submit',e=>{e.preventDefault();alert('Welcome to OYLA — '+e.target.querySelector('input').value+' added to the list.');e.target.reset();});
+document.addEventListener('submit',e=>{if(e.target.classList.contains('news')){e.preventDefault();alert('Welcome to OYLA — '+e.target.querySelector('input').value+' added to the list.');e.target.reset();}});
+
+/* ---------- FOOTER ON EVERY PAGE ---------- */
+(function(){const src=document.getElementById('footer');if(!src)return;
+  ['page-product','page-cart','page-checkout','page-contact','page-about','page-shop','page-doc'].forEach(id=>{
+    const pg=document.getElementById(id);if(!pg)return;
+    const f=src.cloneNode(true);f.removeAttribute('id');
+    f.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+    pg.appendChild(f);});})();
 
 /* ---------- AI ASSISTANT ---------- */
 const aiFab=document.getElementById('aiFab'),aiPanel=document.getElementById('aiPanel'),
